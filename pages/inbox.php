@@ -26,7 +26,7 @@ $sql = "SELECT m.*, u.username AS sender_name
         FROM messages m
         JOIN users u ON m.from_id = u.id
         WHERE m.to_id = ?
-        ORDER BY m.created_at DESC";
+        ORDER BY m.timestamp DESC";
 $stmt = mysqli_prepare($conn, $sql);
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);

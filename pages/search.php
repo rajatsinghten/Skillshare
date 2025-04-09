@@ -18,34 +18,48 @@ $result = mysqli_query($conn, $query);
 <html>
 <head>
     <title>Search Skills</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/search.css">
 </head>
 <body>
-    <h2>Search Skills</h2>
-    <form method="GET">
+<?php include("../includes/header.php"); ?>
+<link rel="stylesheet" href="../assets/css/search.css">
+
+<div class="container">
+    <h2>🔍 Explore Skills</h2>
+
+    <form method="GET" class="search-form">
         <input type="text" name="search" placeholder="Search by title..." value="<?php echo $search; ?>">
+        
         <select name="type">
             <option value="">All Types</option>
             <option value="offer" <?php if ($type == 'offer') echo 'selected'; ?>>Offer</option>
             <option value="request" <?php if ($type == 'request') echo 'selected'; ?>>Request</option>
         </select>
+
         <input type="text" name="category" placeholder="Category..." value="<?php echo $category; ?>">
+        
         <button type="submit">Search</button>
     </form>
-    <hr>
 
-    <?php while ($row = mysqli_fetch_assoc($result)) { ?>
-        <div>
-            <img src="../uploads/<?php echo htmlspecialchars($row['skill_img']); ?>" width="100" alt="Skill Image">
-            <h3><a href="view_skill.php?id=<?php echo $row['id']; ?>"><?php echo htmlspecialchars($row['title']); ?></a></h3>
-            <p><?php echo substr(htmlspecialchars($row['description']), 0, 100); ?>...</p>
-            <p><strong><?php echo ucfirst(htmlspecialchars($row['type'])); ?></strong> | <?php echo htmlspecialchars($row['category']); ?></p>
-            <form method="POST" action="inbox.php">
-                <input type="hidden" name="to_id" value="<?php echo $row['user_id']; ?>">
-                <button type="submit">Connect</button>
-            </form>
-        </div>
-        <hr>
-    <?php } ?>
+    <div class="results">
+        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+            <div class="skill-card">
+                <img src="../uploads/<?php echo htmlspecialchars($row['skill_img']); ?>" alt="Skill Image">
+                <div class="skill-info">
+                    <h3><?php echo htmlspecialchars($row['title']); ?></h3>
+                    <p class="desc"><?php echo substr(htmlspecialchars($row['description']), 0, 100); ?>...</p>
+                    <p><strong><?php echo ucfirst($row['type']); ?></strong> | <?php echo htmlspecialchars($row['category']); ?></p>
+                    
+                    <form method="POST" action="inbox.php">
+                        <input type="hidden" name="to_id" value="<?php echo $row['user_id']; ?>">
+                        <button type="submit" class="connect-btn">Connect</button>
+                    </form>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
+</div>
+
+<?php include("../includes/footer.php"); ?>
 </body>
 </html>

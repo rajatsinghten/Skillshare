@@ -2,11 +2,11 @@
 require_once('../includes/auth.php');
 require_once('../includes/header.php');
 ?>
-
+<link rel="stylesheet" href="../assets/css/dashboard.css">
 <div class="dashboard-container">
     <h2>Welcome to Your Skill Dashboard</h2>
 
-    <p>Hello <strong><?php echo htmlspecialchars($_SESSION['user_name']); ?></strong> 👋,</p>
+    <p>Hello <strong><span class="user-name"><?php echo htmlspecialchars($_SESSION['user_name']); ?></span></strong> 👋,</p>
 
     <p>
         This is your personal space where you can manage your skill-sharing journey. Whether you're looking to offer your expertise or learn something new from others, you're in the right place!

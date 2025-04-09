@@ -1,0 +1,104 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-container {
+    background: linear-gradient(to bottom, #fff, #fafafa);
+    max-width: 850px;
+    margin: 60px auto;
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.dashboard-container:hover {
+    box-shadow: 0 16px 32px rgba(0,0,0,0.15);
+}
+
+.dashboard-container h2 {
+    font-size: 30px;
+    color: #800442;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.dashboard-container p {
+    color: #444;
+    line-height: 1.7;
+    font-size: 16px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.dashboard-actions {
+    background-color: #fff0f6;
+    padding: 30px;
+    border-radius: 12px;
+    margin-top: 30px;
+    box-shadow: 0 5px 15px rgba(128, 4, 66, 0.05);
+}
+
+.dashboard-actions h3 {
+    font-size: 22px;
+    color: #400341;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.dashboard-actions ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dashboard-actions li {
+    background-color: #fff;
+    border-left: 6px solid #800442;
+    padding: 18px 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+}
+
+.dashboard-actions li:hover {
+    transform: translateY(-4px);
+    background-color: #fff9fc;
+}
+
+.dashboard-actions a {
+    color: #800442;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.dashboard-actions a:hover {
+    color: #400341;
+    text-decoration: underline;
+}
+
+.description {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-top: 8px;
+}
+
+.footer-message {
+    text-align: center;
+    margin-top: 40px;
+    font-style: italic;
+    font-size: 15px;
+    color: #777;
+}
+
+.user-name {
+    font-size: 22px;
+    color: #800442;
+}

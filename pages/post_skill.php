@@ -40,27 +40,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html>
 <head>
     <title>Post Skill</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/post_skill.css">
 </head>
 <body>
+<div class="container">
     <h2>Post a New Skill</h2>
 
     <?php if ($success): ?>
-        <p style="color: green;"><?php echo $success; ?></p>
+        <p class="message success"><?php echo $success; ?></p>
     <?php elseif ($error): ?>
-        <p style="color: red;"><?php echo $error; ?></p>
+        <p class="message error"><?php echo $error; ?></p>
     <?php endif; ?>
 
     <form method="POST" enctype="multipart/form-data">
-        <input type="text" name="title" placeholder="Skill Title" required><br><br>
-        <textarea name="description" placeholder="Description" required></textarea><br><br>
-        <input type="text" name="category" placeholder="Category" required><br><br>
+        <label for="title">Skill Title</label>
+        <input type="text" name="title" required>
+
+        <label for="description">Description</label>
+        <textarea name="description" required></textarea>
+
+        <label for="category">Category</label>
+        <input type="text" name="category" required>
+
+        <label for="type">Type</label>
         <select name="type" required>
             <option value="offer">I can offer this</option>
             <option value="request">I want to learn this</option>
-        </select><br><br>
-        <input type="file" name="image" accept="image/*" required><br><br>
+        </select>
+
+        <label for="image">Skill Image</label>
+        <input type="file" name="image" accept="image/*" required>
+
         <button type="submit">Post Skill</button>
     </form>
+</div>
 </body>
 </html>
