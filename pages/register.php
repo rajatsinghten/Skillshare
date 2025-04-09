@@ -1,38 +1,39 @@
-<?php require_once('../includes/header.php'); ?>
+<?php session_start(); ?>
 
-<h2>Register</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - SkillConnect</title>
+    <link rel="stylesheet" href="../assets/css/login.css">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Create Your Account </h2>
+        <p>Join the SkillShare network to learn and share</p>
 
-<?php if (isset($_SESSION['error'])): ?>
-    <div class="alert alert-danger">
-        <?php 
-        echo $_SESSION['error'];
-        unset($_SESSION['error']);
-        ?>
+        <?php if (isset($_SESSION['error'])): ?>
+            <p style="color: red;"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></p>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['success'])): ?>
+            <p style="color: green;"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></p>
+        <?php endif; ?>
+
+        <form method="POST" action="../includes/auth.php">
+            <label for="name">Full Name</label>
+            <input type="text" name="name" required placeholder="Enter your full name">
+
+            <label for="email">Email</label>
+            <input type="email" name="email" required placeholder="Enter your email">
+
+            <label for="password">Password</label>
+            <input type="password" name="password" required placeholder="Create a password">
+
+            <button type="submit" name="register">Register</button>
+        </form>
+
+        <p class="register-link">Already have an account? <a href="login.php">Login here</a></p>
     </div>
-<?php endif; ?>
-
-<?php if (isset($_SESSION['success'])): ?>
-    <div class="alert alert-success">
-        <?php 
-        echo $_SESSION['success'];
-        unset($_SESSION['success']);
-        ?>
-    </div>
-<?php endif; ?>
-
-<form method="POST" action="../includes/auth.php">
-    <label>Full Name:</label>
-    <input type="text" name="name" required><br><br>
-
-    <label>Email:</label>
-    <input type="email" name="email" required><br><br>
-
-    <label>Password:</label>
-    <input type="password" name="password" required><br><br>
-
-    <input type="submit" name="register" value="Register">
-</form>
-
-<p>Already have an account? <a href="login.php">Login here</a></p>
-
-<?php require_once('../includes/footer.php'); ?>
+</body>
+</html>
