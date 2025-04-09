@@ -62,3 +62,37 @@ footer {
     text-align: center;
     margin: 20px 0;
 }
+/* Header/Navbar */
+.site-header {
+    background: linear-gradient(to right, #800442, #400341);
+    padding: 20px 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.header-content {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color: rgb(0, 0, 0);
+    font-size: 28px;
+    margin: 0;
+}
+
+.main-nav a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.main-nav a:hover {
+    color: #002f6c;
+}
