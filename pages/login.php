@@ -56,11 +56,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input 
                 type="password" 
                 name="password" 
+                id="password" 
                 required 
                 placeholder="Enter your password" 
                 class="<?php echo ($loginFailed ? 'input-error' : ''); ?>"
             >
 
+            <!-- Show Password toggle -->
+            <div style="margin-top: 5px;">
+                <input type="checkbox" id="togglePassword">
+                <label for="togglePassword" style="font-size: 14px;">Show Password</label>
+            </div>
+
+            <!-- Error message -->
             <?php if (!empty($error)): ?>
                 <p class="error-message"><?php echo $error; ?></p>
             <?php endif; ?>
@@ -68,7 +76,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit" name="login">Login</button>
         </form>
 
+
         <p class="register-link">Don't have an account? <a href="register.php">Register here</a></p>
     </div>
+
+    <script>
+    const toggle = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+
+    toggle.addEventListener('change', function () {
+        password.type = this.checked ? 'text' : 'password';
+    });
+</script>
+
 </body>
 </html>
