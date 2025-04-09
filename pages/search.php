@@ -36,10 +36,14 @@ $result = mysqli_query($conn, $query);
 
     <?php while ($row = mysqli_fetch_assoc($result)) { ?>
         <div>
-            <img src="../uploads/<?php echo $row['image']; ?>" width="100">
-            <h3><a href="view_skill.php?id=<?php echo $row['id']; ?>"><?php echo $row['title']; ?></a></h3>
-            <p><?php echo substr($row['description'], 0, 100); ?>...</p>
-            <p><strong><?php echo ucfirst($row['type']); ?></strong> | <?php echo $row['category']; ?></p>
+            <img src="../uploads/<?php echo htmlspecialchars($row['skill_img']); ?>" width="100" alt="Skill Image">
+            <h3><a href="view_skill.php?id=<?php echo $row['id']; ?>"><?php echo htmlspecialchars($row['title']); ?></a></h3>
+            <p><?php echo substr(htmlspecialchars($row['description']), 0, 100); ?>...</p>
+            <p><strong><?php echo ucfirst(htmlspecialchars($row['type'])); ?></strong> | <?php echo htmlspecialchars($row['category']); ?></p>
+            <form method="POST" action="inbox.php">
+                <input type="hidden" name="to_id" value="<?php echo $row['user_id']; ?>">
+                <button type="submit">Connect</button>
+            </form>
         </div>
         <hr>
     <?php } ?>

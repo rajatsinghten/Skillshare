@@ -2,6 +2,8 @@
 include("../includes/db.php");
 include("../includes/auth.php");
 
+$success = $error = "";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_id = $_SESSION['user_id'];
     $title = $_POST['title'];
@@ -10,19 +12,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $type = $_POST['type'];
 
     // Handle Image Upload
+    $upload_dir = "../uploads/";
     $image = $_FILES['image']['name'];
     $temp = $_FILES['image']['tmp_name'];
-    $upload_dir = "../uploads/";
-    $image_path = $upload_dir . basename($image);
-    move_uploaded_file($temp, $image_path);
 
-    // Save to DB
-    $sql = "INSERT INTO skills (user_id, title, description, image, category, type) VALUES (?, ?, ?, ?, ?, ?)";
-    $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "isssss", $user_id, $title, $desc, $image, $category, $type);
-    mysqli_stmt_execute($stmt);
+    if (!empty($image)) {
+        $image_name = time() . "_" . basename($image);
+        $image_path = $upload_dir . $image_name;
 
-    $success = "Skill posted successfully!";
+        if (move_uploaded_file($temp, $image_path)) {
+            // Save to DB
+            $sql = "INSERT INTO skills (user_id, title, description, skill_img, category, type) VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt = mysqli_prepare($conn, $sql);
+            mysqli_stmt_bind_param($stmt, "isssss", $user_id, $title, $desc, $image_name, $category, $type);
+            mysqli_stmt_execute($stmt);
+            $success = "Skill posted successfully!";
+        } else {
+            $error = "Failed to upload image.";
+        }
+    } else {
+        $error = "No image selected.";
+    }
 }
 ?>
 
@@ -34,7 +44,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <h2>Post a New Skill</h2>
-    <?php if (isset($success)) echo "<p style='color:green;'>$success</p>"; ?>
+
+    <?php if ($success): ?>
+        <p style="color: green;"><?php echo $success; ?></p>
+    <?php elseif ($error): ?>
+        <p style="color: red;"><?php echo $error; ?></p>
+    <?php endif; ?>
+
     <form method="POST" enctype="multipart/form-data">
         <input type="text" name="title" placeholder="Skill Title" required><br><br>
         <textarea name="description" placeholder="Description" required></textarea><br><br>
