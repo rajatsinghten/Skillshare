@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <style>
     .form-container {
-        max-width: 800px;
+        max-width: 1000px;
         margin: 0 auto;
         background-color: #fff;
         padding: 30px;
@@ -49,10 +49,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     h2 {
         color: #2c3e50;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
         text-align: center;
         border-bottom: 2px solid #ecf0f1;
         padding-bottom: 10px;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
     }
     
     .message {
@@ -76,6 +79,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     form {
         display: grid;
         gap: 15px;
+        max-width: 800px;
+        margin: 0 auto;
     }
     
     label {

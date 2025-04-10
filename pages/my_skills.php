@@ -34,7 +34,9 @@ $result = mysqli_stmt_get_result($stmt);
     .skills-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 20px;
+        gap: 25px;
+        max-width: 900px;
+        margin: 0 auto;
     }
     
     .skill-card {
@@ -43,6 +45,9 @@ $result = mysqli_stmt_get_result($stmt);
         overflow: hidden;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
     }
     
     .skill-card:hover {
@@ -57,7 +62,10 @@ $result = mysqli_stmt_get_result($stmt);
     }
     
     .skill-card-content {
-        padding: 15px;
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
     }
     
     .skill-card h3 {
@@ -77,6 +85,8 @@ $result = mysqli_stmt_get_result($stmt);
         justify-content: space-between;
         margin-top: 15px;
         font-size: 14px;
+        margin-top: auto;
+        padding-top: 15px;
     }
     
     .skill-type {
