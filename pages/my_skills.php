@@ -14,8 +14,26 @@ $result = mysqli_stmt_get_result($stmt);
 
 <style>
     /* Skills page specific styles */
+    body {
+    margin: 0;
+    padding: 0;
+    background-color: #f6f9fc;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    }
+
+    .main-content {
+        flex: 1;
+        display: block; /* remove flex centering */
+        padding-top: 80px; /* creates space below navbar */
+        display: flex;
+        justify-content: center;
+    }
     .skills-container {
         max-width: 1000px;
+        WIDTH: 90%;
         margin: 0 auto;
         background-color: #fff;
         padding: 30px;
@@ -136,30 +154,32 @@ $result = mysqli_stmt_get_result($stmt);
     }
 </style>
 
-<div class="skills-container">
-    <h2>My Posted Skills</h2>
+<div class="main-content">
+    <div class="skills-container">
+        <h2>My Posted Skills</h2>
 
-    <?php if (mysqli_num_rows($result) > 0): ?>
-        <div class="skills-grid">
-            <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                <div class="skill-card">
-                    <img src="../uploads/<?php echo htmlspecialchars($row['skill_img']); ?>" alt="Skill Image">
-                    <div class="skill-card-content">
-                        <h3><?php echo htmlspecialchars($row['title']); ?></h3>
-                        <p class="desc"><?php echo substr(htmlspecialchars($row['description']), 0, 100); ?>...</p>
-                        <div class="skill-info">
-                            <span><strong>Category:</strong> <?php echo htmlspecialchars($row['category']); ?></span>
-                            <span class="skill-type type-<?php echo $row['type']; ?>"><?php echo ucfirst($row['type']); ?></span>
+        <?php if (mysqli_num_rows($result) > 0): ?>
+            <div class="skills-grid">
+                <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                    <div class="skill-card">
+                        <img src="../uploads/<?php echo htmlspecialchars($row['skill_img']); ?>" alt="Skill Image">
+                        <div class="skill-card-content">
+                            <h3><?php echo htmlspecialchars($row['title']); ?></h3>
+                            <p class="desc"><?php echo substr(htmlspecialchars($row['description']), 0, 100); ?>...</p>
+                            <div class="skill-info">
+                                <span><strong>Category:</strong> <?php echo htmlspecialchars($row['category']); ?></span>
+                                <span class="skill-type type-<?php echo $row['type']; ?>"><?php echo ucfirst($row['type']); ?></span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            <?php endwhile; ?>
-        </div>
-    <?php else: ?>
-        <div class="no-skills">
-            <p>You haven't posted any skills yet. <a href="post_skill.php">Post one now</a>!</p>
-        </div>
-    <?php endif; ?>
+                <?php endwhile; ?>
+            </div>
+        <?php else: ?>
+            <div class="no-skills">
+                <p>You haven't posted any skills yet. <a href="post_skill.php">Post one now</a>!</p>
+            </div>
+        <?php endif; ?>
+    </div>
 </div>
 
 <?php include("../includes/footer.php"); ?>
