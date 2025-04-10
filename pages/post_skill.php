@@ -37,107 +37,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<style>
-    .form-container {
-        WIDTH: 65%;
-        margin: 0 auto;
-        background-color: #fff;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-    
-    h2 {
-        color: #2c3e50;
-        margin-bottom: 25px;
-        text-align: center;
-        border-bottom: 2px solid #ecf0f1;
-        padding-bottom: 10px;
-        max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    
-    .message {
-        padding: 15px;
-        border-radius: 5px;
-        margin-bottom: 20px;
-    }
-    
-    .success {
-        background-color: #d4edda;
-        color: #155724;
-        border-left: 4px solid #28a745;
-    }
-    
-    .error {
-        background-color: #f8d7da;
-        color: #721c24;
-        border-left: 4px solid #dc3545;
-    }
-    
-    form {
-        display: grid;
-        gap: 15px;
-        max-width: 800px;
-        margin: 0 auto;
-    }
-    
-    label {
-        font-weight: 600;
-        margin-bottom: 5px;
-        color: #2c3e50;
-        display: block;
-    }
-    
-    input[type="text"],
-    select,
-    textarea {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 16px;
-        transition: border-color 0.3s;
-    }
-    
-    input[type="text"]:focus,
-    select:focus,
-    textarea:focus {
-        border-color: #3498db;
-        outline: none;
-    }
-    
-    textarea {
-        min-height: 150px;
-        resize: vertical;
-    }
-    
-    button[type="submit"] {
-        background-color: #3498db;
-        color: white;
-        border: none;
-        padding: 12px;
-        font-size: 16px;
-        font-weight: 600;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-    
-    button[type="submit"]:hover {
-        background-color: #2980b9;
-    }
-    
-    @media (max-width: 768px) {
-        .form-container {
-            padding: 20px;
-        }
-    }
-</style>
+<link rel="stylesheet" href="../assets/css/skills.css">
 
 <div class="form-container">
-    <h2>Post a New Skill</h2>
+    <h2 class="page-title">Post a New Skill</h2>
 
     <?php if ($success): ?>
         <p class="message success"><?php echo $success; ?></p>
@@ -146,22 +49,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php endif; ?>
 
     <form method="POST" enctype="multipart/form-data">
-        <div>
+        <div class="form-group">
             <label for="title">Skill Title</label>
             <input type="text" name="title" required>
         </div>
 
-        <div>
+        <div class="form-group">
             <label for="description">Description</label>
             <textarea name="description" required></textarea>
         </div>
 
-        <div>
+        <div class="form-group">
             <label for="category">Category</label>
             <input type="text" name="category" required>
         </div>
 
-        <div>
+        <div class="form-group">
             <label for="type">Type</label>
             <select name="type" required>
                 <option value="offer">I can offer this</option>
@@ -169,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </select>
         </div>
 
-        <div>
+        <div class="form-group">
             <label for="image">Skill Image</label>
             <input type="file" name="image" accept="image/*" required>
         </div>
@@ -179,3 +82,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 
 <?php include("../includes/footer.php"); ?>
+
+

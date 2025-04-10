@@ -92,7 +92,7 @@
         /* Main content container */
         .main-content {
             flex: 1 0 auto;
-            padding: 20px 0;
+            padding: 0;
         }
         
         /* Footer styles */
