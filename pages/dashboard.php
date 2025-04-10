@@ -1,6 +1,34 @@
 <?php
 require_once('../includes/auth.php');
+require_once('../includes/db.php');
 require_once('../includes/header.php');
+
+// Get user ID
+$user_id = $_SESSION['user_id'];
+
+// Fetch accepted connections
+$connections_sql = "
+    SELECT 
+        u.id,
+        u.name,
+        m.timestamp AS connected_since
+    FROM 
+        messages m
+    JOIN 
+        users u ON (m.from_id = u.id OR m.to_id = u.id)
+    WHERE 
+        ((m.from_id = ? AND m.to_id = u.id) OR (m.to_id = ? AND m.from_id = u.id))
+        AND m.status = 'accepted'
+    GROUP BY
+        u.id
+    ORDER BY 
+        connected_since DESC
+";
+
+$connections_stmt = mysqli_prepare($conn, $connections_sql);
+mysqli_stmt_bind_param($connections_stmt, "ii", $user_id, $user_id);
+mysqli_stmt_execute($connections_stmt);
+$connections_result = mysqli_stmt_get_result($connections_stmt);
 
 // Sample featured skills (can later be fetched from DB)
 $featuredSkills = [
@@ -32,12 +60,35 @@ $featuredSkills = [
 </head>
 <body>
 
-<div class="dashboard-container">
-    <h2>Welcome to Your Skill Dashboard</h2>
-    <p>Hello <strong><?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : 'Guest'; ?></strong> 👋,</p>
-    <p>This is your space to share and learn skills with others!</p>
+    <div class="dashboard-container">
+        <h2>Welcome to Your Skill Dashboard</h2>
+        <p>Hello <strong><?php echo htmlspecialchars($_SESSION['user_name']); ?></strong> 👋,</p>
+        <p>This is your space to share and learn skills with others!</p>
+        
+        <!-- 🤝 Your Connections -->
+        <h3 class="center-heading">🤝 Your Connections</h3>
+        <div class="connections-section">
+            <?php if (mysqli_num_rows($connections_result) > 0): ?>
+                <div class="connections-grid">
+                    <?php while ($connection = mysqli_fetch_assoc($connections_result)): ?>
+                        <div class="connection-card">
+                            <div class="connection-avatar">
+                                <?php echo strtoupper(substr($connection['name'], 0, 1)); ?>
+                            </div>
+                            <div class="connection-name"><?php echo htmlspecialchars($connection['name']); ?></div>
+                            <div class="connection-date">Connected since: <?php echo date('M d, Y', strtotime($connection['connected_since'])); ?></div>
+                            <div class="connection-actions">
+                                <a href="messages.php?user=<?php echo $connection['id']; ?>">Message</a>
+                            </div>
+                        </div>
+                    <?php endwhile; ?>
+                </div>
+            <?php else: ?>
+                <p class="text-center">You don't have any connections yet. Go to the <a href="search.php">Search page</a> to find users to connect with!</p>
+            <?php endif; ?>
+        </div>
 
-    <!-- 🌟 Featured Skills -->
+        <!-- 🌟 Featured Skills -->
     <h3 class="center-heading">✨ Featured Skills</h3>
     <div class="featured-skills">
         <div class="skill-card">
@@ -58,7 +109,6 @@ $featuredSkills = [
             <p>Capture stunning moments like a pro.</p>
         </div>
     </div>
-
 
     <div class="view-more-wrapper">
         <a href="search.php" class="view-more-btn">🔍 View More Skills</a>
