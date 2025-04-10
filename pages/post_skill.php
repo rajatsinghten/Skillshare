@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <style>
     .form-container {
-        max-width: 1000px;
+        WIDTH: 65%;
         margin: 0 auto;
         background-color: #fff;
         padding: 30px;
