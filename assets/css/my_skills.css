@@ -1,25 +1,232 @@
+/* General Styles */
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
     margin: 0;
     padding: 0;
+    background-color: #f5f7fa; /* from first block */
+    color: #333;
 }
 
+/* Container */
 .container {
     max-width: 1000px;
-    margin: 40px auto;
-    padding: 30px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    margin: 40px auto;  /* from second block */
+    padding: 30px;      /* from second block */
+    border-radius: 12px;/* from second block */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);  /* from second block */
+}
+
+/* Headers */
+h2, h3 {
+    color: #2c3e50;
+    margin-top: 20px;
 }
 
 h2 {
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 10px;
+    color: #3498db;
     text-align: center;
-    color: #800442;
-    margin-bottom: 30px;
 }
 
+/* Navbar from First Block */
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* Header */
+header {
+    background-color: #0066cc;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Messages: success & error */
+.success {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-left: 4px solid #28a745;
+}
+
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-left: 4px solid #dc3545;
+}
+
+/* Lists and Items */
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+li {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-left: 4px solid #3498db;
+}
+
+li:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+small {
+    color: #7f8c8d;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Horizontal Rule */
+hr {
+    margin: 30px 0;
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.1), rgba(0,0,0,0));
+}
+
+/* Forms */
+form {
+    margin-top: 12px;
+}
+
+label {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+    font-weight: 500;
+    display: block;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* Buttons */
+button {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 8px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+/* Accept/Reject Buttons */
+button[value="accept"],
+button[name="action"][value="accept"] {
+    background-color: #2ecc71;
+    color: white;
+}
+
+button[value="accept"]:hover,
+button[name="action"][value="accept"]:hover {
+    background-color: #27ae60;
+}
+
+button[value="reject"],
+button[name="action"][value="reject"] {
+    background-color: #e74c3c;
+    color: white;
+}
+
+button[value="reject"]:hover,
+button[name="action"][value="reject"]:hover {
+    background-color: #c0392b;
+}
+
+/* Additional Message Text Style */
+.message-text {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+    font-style: italic;
+    border-left: 3px solid #ddd;
+}
+
+/* Status */
+.status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 0.85em;
+    font-weight: bold;
+}
+
+.status-pending {
+    background-color: #f39c12;
+    color: white;
+}
+
+.status-accepted {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.status-rejected {
+    background-color: #e74c3c;
+    color: white;
+}
+
+/* Debug info */
+.debug-info {
+    background: #f0f0f0;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border-left: 4px solid #95a5a6;
+    font-size: 14px;
+}
+
+/* No Requests */
+.no-requests {
+    text-align: center;
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    color: #7f8c8d;
+}
+
+/* Skill Cards Styling (from second block) */
 .skills-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -73,4 +280,15 @@ h2 {
     border-radius: 8px;
     margin-bottom: 15px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    li {
+        padding: 12px;
+    }
 }

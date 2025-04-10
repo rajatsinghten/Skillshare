@@ -1,6 +1,7 @@
 <?php
 include("../includes/db.php");
 include("../includes/auth.php");
+include("../includes/header.php");
 
 $success = $error = "";
 
@@ -36,14 +37,106 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Post Skill</title>
-    <link rel="stylesheet" href="../assets/css/post_skill.css">
-</head>
-<body>
-<div class="container">
+<style>
+    .form-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    h2 {
+        color: #2c3e50;
+        margin-bottom: 25px;
+        text-align: center;
+        border-bottom: 2px solid #ecf0f1;
+        padding-bottom: 10px;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .message {
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    
+    .success {
+        background-color: #d4edda;
+        color: #155724;
+        border-left: 4px solid #28a745;
+    }
+    
+    .error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border-left: 4px solid #dc3545;
+    }
+    
+    form {
+        display: grid;
+        gap: 15px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    label {
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #2c3e50;
+        display: block;
+    }
+    
+    input[type="text"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+    }
+    
+    input[type="text"]:focus,
+    select:focus,
+    textarea:focus {
+        border-color: #3498db;
+        outline: none;
+    }
+    
+    textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+    
+    button[type="submit"] {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    button[type="submit"]:hover {
+        background-color: #2980b9;
+    }
+    
+    @media (max-width: 768px) {
+        .form-container {
+            padding: 20px;
+        }
+    }
+</style>
+
+<div class="form-container">
     <h2>Post a New Skill</h2>
 
     <?php if ($success): ?>
@@ -53,26 +146,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php endif; ?>
 
     <form method="POST" enctype="multipart/form-data">
-        <label for="title">Skill Title</label>
-        <input type="text" name="title" required>
+        <div>
+            <label for="title">Skill Title</label>
+            <input type="text" name="title" required>
+        </div>
 
-        <label for="description">Description</label>
-        <textarea name="description" required></textarea>
+        <div>
+            <label for="description">Description</label>
+            <textarea name="description" required></textarea>
+        </div>
 
-        <label for="category">Category</label>
-        <input type="text" name="category" required>
+        <div>
+            <label for="category">Category</label>
+            <input type="text" name="category" required>
+        </div>
 
-        <label for="type">Type</label>
-        <select name="type" required>
-            <option value="offer">I can offer this</option>
-            <option value="request">I want to learn this</option>
-        </select>
+        <div>
+            <label for="type">Type</label>
+            <select name="type" required>
+                <option value="offer">I can offer this</option>
+                <option value="request">I want to learn this</option>
+            </select>
+        </div>
 
-        <label for="image">Skill Image</label>
-        <input type="file" name="image" accept="image/*" required>
+        <div>
+            <label for="image">Skill Image</label>
+            <input type="file" name="image" accept="image/*" required>
+        </div>
 
         <button type="submit">Post Skill</button>
     </form>
 </div>
-</body>
-</html>
+
+<?php include("../includes/footer.php"); ?>
