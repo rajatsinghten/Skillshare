@@ -62,7 +62,9 @@ $featuredSkills = [
 
     <div class="dashboard-container">
         <h2>Welcome to Your Skill Dashboard</h2>
-        <p>Hello <strong><?php echo htmlspecialchars($_SESSION['user_name']); ?></strong> 👋,</p>
+        <p>Hello 
+            <!-- <strong><?php echo htmlspecialchars($_SESSION['user_name']); ?></strong>  -->
+            👋,</p>
         <p>This is your space to share and learn skills with others!</p>
         
         <!-- 🤝 Your Connections -->
