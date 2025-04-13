@@ -16,14 +16,14 @@ $result = mysqli_stmt_get_result($stmt);
 <link rel="stylesheet" href="../assets/css/skills.css">
 
 <!-- Inline style to handle spacing when there are no skills -->
-<style>
+<!-- <style>
     .no-skills-state {
         margin-top: 80px; /* Adjust based on your navbar height */
     }
-</style>
+</style> -->
 
 <!-- Main Container -->
-<div class="page-container <?php echo (mysqli_num_rows($result) === 0) ? 'no-skills-state' : ''; ?>">
+<div class="page-container" height="100%" >
     <h2 class="page-title">My Posted Skills</h2>
 
     <?php if (mysqli_num_rows($result) > 0): ?>
@@ -45,7 +45,7 @@ $result = mysqli_stmt_get_result($stmt);
             <?php endwhile; ?>
         </div>
     <?php else: ?>
-        <div class="no-skills">
+        <div class="no-skills" >
             <p>You haven't posted any skills yet. <a href="post_skill.php">Post one now</a>!</p>
         </div>
     <?php endif; ?>

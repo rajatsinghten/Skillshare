@@ -93,7 +93,7 @@ if (!$sent_result) {
 
 <link rel="stylesheet" href="../assets/css/skills.css">
 
-<div class="inbox-container">
+<div class="page-container">
     <h2 class="page-title">📥 Connection Requests</h2>
 
     <!-- Display success and error messages -->
