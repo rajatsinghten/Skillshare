@@ -12,9 +12,18 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 ?>
 
+<!-- External Stylesheet -->
 <link rel="stylesheet" href="../assets/css/skills.css">
 
-<div class="page-container">
+<!-- Inline style to handle spacing when there are no skills -->
+<style>
+    .no-skills-state {
+        margin-top: 80px; /* Adjust based on your navbar height */
+    }
+</style>
+
+<!-- Main Container -->
+<div class="page-container <?php echo (mysqli_num_rows($result) === 0) ? 'no-skills-state' : ''; ?>">
     <h2 class="page-title">My Posted Skills</h2>
 
     <?php if (mysqli_num_rows($result) > 0): ?>
@@ -27,7 +36,9 @@ $result = mysqli_stmt_get_result($stmt);
                         <p class="desc"><?php echo substr(htmlspecialchars($row['description']), 0, 100); ?>...</p>
                         <div class="skill-info">
                             <span><strong>Category:</strong> <?php echo htmlspecialchars($row['category']); ?></span>
-                            <span class="skill-type type-<?php echo $row['type']; ?>"><?php echo ucfirst($row['type']); ?></span>
+                            <span class="skill-type type-<?php echo htmlspecialchars($row['type']); ?>">
+                                <?php echo ucfirst(htmlspecialchars($row['type'])); ?>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -41,4 +52,3 @@ $result = mysqli_stmt_get_result($stmt);
 </div>
 
 <?php include("../includes/footer.php"); ?>
-
