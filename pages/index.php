@@ -7,15 +7,15 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkillConnect - Share & Learn Skills</title>
+    <title>SkillShare - Share & Learn Skills</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #4361ee;
-            --primary-dark: #3a56d4;
-            --secondary: #3f37c9;
-            --accent: #4895ef;
+            --primary: #2d3e50;
+            --primary-dark: #230c27;
+            --secondary:rgb(201, 55, 116);
+            --accent:rgb(239, 72, 108);
             --light: #f8f9fa;
             --dark: #212529;
             --gray: #6c757d;
@@ -62,7 +62,7 @@ session_start();
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.5rem 0;
+            padding: 1.5rem 1.5rem;
         }
 
         .logo {
@@ -72,6 +72,7 @@ session_start();
             text-decoration: none;
             display: flex;
             align-items: center;
+            margin-left: 1.5rem;
         }
 
         .logo i {
@@ -86,6 +87,7 @@ session_start();
             font-weight: 500;
             transition: var(--transition);
             position: relative;
+            margin-left:1.5 rem;
         }
 
         nav a:hover {
@@ -114,6 +116,7 @@ session_start();
             border-radius: 50px;
             font-weight: 500;
             transition: var(--transition);
+            margin-left: 1.5rem;
         }
 
         .cta-button:hover {
@@ -125,7 +128,7 @@ session_start();
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, #4361ee 0%, #3f37c9 100%);
+            background: linear-gradient(135deg,rgb(238, 67, 184) 0%,rgb(191, 33, 46) 100%);
             color: white;
             padding: 10rem 0 6rem;
             position: relative;
@@ -139,7 +142,7 @@ session_start();
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            background: url('https://images.pexels.com/photos/301703/pexels-photo-301703.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2') no-repeat center center/cover;
             opacity: 0.15;
             z-index: 0;
         }
@@ -275,7 +278,7 @@ session_start();
         /* Stats Section */
         .stats {
             padding: 4rem 0;
-            background: linear-gradient(135deg, #3f37c9 0%, #4361ee 100%);
+            background: linear-gradient(135deg,rgb(213, 51, 99) 0%,rgb(228, 45, 60) 100%);
             color: white;
             text-align: center;
         }
@@ -372,7 +375,7 @@ session_start();
         /* CTA Section */
         .cta-section {
             padding: 6rem 0;
-            background: linear-gradient(rgba(67, 97, 238, 0.9), rgba(67, 97, 238, 0.9)), url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            background: linear-gradient(rgba(226, 42, 51, 0.9), rgba(228, 51, 107, 0.9)), url('https://images.pexels.com/photos/1925536/pexels-photo-1925536.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2') no-repeat center center/cover;
             color: white;
             text-align: center;
         }
@@ -528,7 +531,7 @@ session_start();
     <header id="header">
         <div class="header-container">
             <a href="index.php" class="logo">
-                <i class="fas fa-hands-helping"></i> SkillConnect
+                <i class="fas fa-hands-helping"></i> SkillShare
             </a>
             <nav>
                 <a href="login.php">Login</a>
@@ -536,7 +539,7 @@ session_start();
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <a href="dashboard.php">Dashboard</a>
                 <?php endif; ?>
-                <a href="#features" class="cta-button">Explore</a>
+                <a   href="#features" class="cta-button">Explore</a>
             </nav>
         </div>
     </header>
