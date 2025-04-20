@@ -6,6 +6,19 @@
     <meta charset="UTF-8">
     <title>Register - SkillConnect</title>
     <link rel="stylesheet" href="../assets/css/login.css">
+    <style>
+        body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: url('https://images.pexels.com/photos/10526880/pexels-photo-10526880.jpeg') no-repeat center center/cover;
+    opacity: 0.9; /* Adjust the background image opacity here */
+    z-index: -1;
+}
+        </style>
 </head>
 <body>
     <div class="login-container">
