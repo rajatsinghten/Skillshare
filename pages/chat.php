@@ -4,6 +4,23 @@ require_once('../includes/db.php');
 require_once('../includes/header.php');
 require_once('../includes/functions.php');
 
+// Debug: Check if chat_messages table exists
+$table_check = mysqli_query($conn, "SHOW TABLES LIKE 'chat_messages'");
+$table_exists = mysqli_num_rows($table_check) > 0;
+
+// Debug: Count total messages in the table
+$count_query = "SELECT COUNT(*) as total FROM chat_messages";
+$total_messages = 0;
+if ($table_exists) {
+    $count_result = mysqli_query($conn, $count_query);
+    if ($count_result) {
+        $total_messages = mysqli_fetch_assoc($count_result)['total'];
+    }
+}
+
+// Uncomment to see debug info
+// echo "<!-- Table exists: " . ($table_exists ? 'Yes' : 'No') . " | Total messages: $total_messages -->";
+
 // Get user ID
 $user_id = $_SESSION['user_id'];
 $active_chat = isset($_GET['user']) ? intval($_GET['user']) : 0;
@@ -56,8 +73,17 @@ if ($active_chat > 0) {
     mysqli_stmt_execute($messages_stmt);
     $messages_result = mysqli_stmt_get_result($messages_stmt);
     
-    while ($row = mysqli_fetch_assoc($messages_result)) {
-        $messages[] = $row;
+    // Debug - check if query is returning results
+    $messages = [];
+    if ($messages_result) {
+        while ($row = mysqli_fetch_assoc($messages_result)) {
+            $messages[] = $row;
+        }
+        // Debug statement - uncomment to check
+        // echo "<!-- Found " . count($messages) . " messages -->";
+    } else {
+        // Debug SQL error if query fails
+        echo "<!-- SQL Error: " . mysqli_error($conn) . " -->";
     }
     
     // Mark messages as read
@@ -153,12 +179,28 @@ if ($active_chat > 0) {
             e.preventDefault();
             
             const formData = new FormData(this);
+            console.log("Sending message:", formData.get('message'));
+            
             fetch('send_message.php', {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log("Response status:", response.status);
+                // For debugging, let's look at the raw text first
+                return response.text().then(text => {
+                    console.log("Raw response:", text);
+                    try {
+                        // Now try to parse it as JSON
+                        return JSON.parse(text);
+                    } catch (error) {
+                        console.error("Failed to parse response as JSON:", error);
+                        throw new Error("Invalid JSON response from server");
+                    }
+                });
+            })
             .then(data => {
+                console.log("Server response:", data);
                 if (data.success) {
                     // Add message to chat
                     const chatMessages = document.getElementById('chatMessages');
@@ -170,40 +212,59 @@ if ($active_chat > 0) {
                     `;
                     chatMessages.appendChild(messageDiv);
                     
+                    // Remove "no messages" text if it exists
+                    const noMessagesElement = document.querySelector('.no-messages');
+                    if (noMessagesElement) {
+                        noMessagesElement.remove();
+                    }
+                    
                     // Clear input and scroll to bottom
                     this.reset();
                     scrollToBottom();
+                } else {
+                    console.error("Error sending message:", data.message);
+                    alert("Failed to send message: " + data.message);
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
+                alert("Error sending message. Check console for details.");
             });
         });
     }
     
     // Poll for new messages every 5 seconds
     let lastMessageId = <?php echo count($messages) > 0 ? $messages[count($messages)-1]['id'] : 0; ?>;
+    console.log("Initial lastMessageId:", lastMessageId);
     
     function checkNewMessages() {
         if (!<?php echo $active_chat ?: 0; ?>) return;
         
         fetch(`get_messages.php?user=<?php echo $active_chat; ?>&last=${lastMessageId}`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
+            console.log("Polling response:", data);
             if (data.messages && data.messages.length > 0) {
                 const chatMessages = document.getElementById('chatMessages');
                 
                 data.messages.forEach(msg => {
+                    console.log("Adding message:", msg);
                     const messageDiv = document.createElement('div');
                     messageDiv.className = 'message received';
                     messageDiv.innerHTML = `
-                        <div class="message-content">${msg.message.replace(/\n/g, '<br>')}</div>
+                        <div class="message-content">${msg.message}</div>
                         <div class="message-time">${msg.time}</div>
                     `;
                     chatMessages.appendChild(messageDiv);
-                    lastMessageId = msg.id;
+                    lastMessageId = Math.max(lastMessageId, msg.id);
                 });
                 
+                console.log("Updated lastMessageId:", lastMessageId);
                 scrollToBottom();
             }
         })

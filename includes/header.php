@@ -136,6 +136,7 @@
                 <a href="../pages/post_skill.php">Post Skill</a>
                 <a href="../pages/my_skills.php">My Skills</a>
                 <a href="../pages/inbox.php">Inbox</a>
+                <a href="../pages/chat.php">Chat</a>
                 <a href="../pages/search.php">Search</a>
                 <a href="../includes/logout.php">Logout</a>
             </nav>

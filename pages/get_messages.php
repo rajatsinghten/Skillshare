@@ -1,6 +1,8 @@
 <?php
-require_once('../includes/auth.php');
+// No HTML output before JSON response
+session_start();
 require_once('../includes/db.php');
+// Don't include header.php or any files that output HTML
 
 // Initialize response
 $response = ['success' => false, 'messages' => []];
@@ -16,6 +18,9 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $partner_id = isset($_GET['user']) ? intval($_GET['user']) : 0;
 $last_id = isset($_GET['last']) ? intval($_GET['last']) : 0;
+
+// Debug info - comment out in production
+// $response['debug'] = ['user_id' => $user_id, 'partner_id' => $partner_id, 'last_id' => $last_id];
 
 // Verify these users are connected
 $check_sql = "

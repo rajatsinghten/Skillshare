@@ -1,24 +1,17 @@
 <?php
-require_once('../includes/auth.php');
+// No HTML output before JSON response
+session_start();
 require_once('../includes/db.php');
+// Don't include header.php or any files that output HTML
 
 // Initialize response array
 $response = ['success' => false, 'message' => ''];
 
-// Check if it's an AJAX request
-$isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
-          strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
-
 // Verify user is logged in
 if (!isset($_SESSION['user_id'])) {
     $response['message'] = 'You must be logged in to send messages.';
-    if ($isAjax) {
-        header('Content-Type: application/json');
-        echo json_encode($response);
-    } else {
-        $_SESSION['error'] = $response['message'];
-        header('Location: login.php');
-    }
+    header('Content-Type: application/json');
+    echo json_encode($response);
     exit();
 }
 
@@ -31,13 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['receiver_id'], $_POST
     // Validate message is not empty
     if (empty($message)) {
         $response['message'] = 'Message cannot be empty.';
-        if ($isAjax) {
-            header('Content-Type: application/json');
-            echo json_encode($response);
-        } else {
-            $_SESSION['error'] = $response['message'];
-            header("Location: chat.php?user=$receiver_id");
-        }
+        header('Content-Type: application/json');
+        echo json_encode($response);
         exit();
     }
     
@@ -56,13 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['receiver_id'], $_POST
     
     if ($check_row['connected'] == 0) {
         $response['message'] = 'You can only message users you are connected with.';
-        if ($isAjax) {
-            header('Content-Type: application/json');
-            echo json_encode($response);
-        } else {
-            $_SESSION['error'] = $response['message'];
-            header('Location: chat.php');
-        }
+        header('Content-Type: application/json');
+        echo json_encode($response);
         exit();
     }
     
@@ -74,35 +57,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['receiver_id'], $_POST
     if (mysqli_stmt_execute($stmt)) {
         $response['success'] = true;
         $response['message'] = 'Message sent successfully.';
+        $response['message_id'] = mysqli_insert_id($conn);
         
-        if ($isAjax) {
-            header('Content-Type: application/json');
-            echo json_encode($response);
-        } else {
-            $_SESSION['success'] = $response['message'];
-            header("Location: chat.php?user=$receiver_id");
-        }
+        header('Content-Type: application/json');
+        echo json_encode($response);
         exit();
     } else {
-        $response['message'] = 'Failed to send message. Please try again.';
-        if ($isAjax) {
-            header('Content-Type: application/json');
-            echo json_encode($response);
-        } else {
-            $_SESSION['error'] = $response['message'];
-            header("Location: chat.php?user=$receiver_id");
-        }
+        $response['message'] = 'Failed to send message: ' . mysqli_error($conn);
+        header('Content-Type: application/json');
+        echo json_encode($response);
         exit();
     }
 }
 
 // If we get here, something went wrong
 $response['message'] = 'Invalid request.';
-if ($isAjax) {
-    header('Content-Type: application/json');
-    echo json_encode($response);
-} else {
-    $_SESSION['error'] = $response['message'];
-    header('Location: chat.php');
-}
+header('Content-Type: application/json');
+echo json_encode($response);
 exit();

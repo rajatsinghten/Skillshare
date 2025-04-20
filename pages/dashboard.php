@@ -80,7 +80,7 @@ $featuredSkills = [
                             <div class="connection-name"><?php echo htmlspecialchars($connection['name']); ?></div>
                             <div class="connection-date">Connected since: <?php echo date('M d, Y', strtotime($connection['connected_since'])); ?></div>
                             <div class="connection-actions">
-                                
+                                <a href="chat.php?user=<?php echo $connection['id']; ?>" class="chat-btn">Chat</a>
                             </div>
                         </div>
                     <?php endwhile; ?>
