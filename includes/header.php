@@ -1,3 +1,8 @@
+<?php
+// Get the filename of the current script to set the active class
+$currentPage = basename($_SERVER['PHP_SELF']);
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -142,12 +147,12 @@
         <div class="container header-content">
             <a href="/" class="logo">Skill<span>Share</span></a>
             <nav class="main-nav">
-                <a href="../pages/dashboard.php" class="active">Dashboard</a>
-                <a href="../pages/post_skill.php">Post Skill</a>
-                <a href="../pages/my_skills.php">My Skills</a>
-                <a href="../pages/inbox.php">Inbox</a>
-                <a href="../pages/chat.php">Chat</a>
-                <a href="../pages/search.php">Search</a>
+                <a href="../pages/dashboard.php" class="<?php echo ($currentPage == 'dashboard.php') ? 'active' : ''; ?>">Dashboard</a>
+                <a href="../pages/post_skill.php" class="<?php echo ($currentPage == 'post_skill.php') ? 'active' : ''; ?>">Post Skill</a>
+                <a href="../pages/my_skills.php" class="<?php echo ($currentPage == 'my_skills.php') ? 'active' : ''; ?>">My Skills</a>
+                <a href="../pages/inbox.php" class="<?php echo ($currentPage == 'inbox.php') ? 'active' : ''; ?>">Inbox</a>
+                <a href="../pages/chat.php" class="<?php echo ($currentPage == 'chat.php') ? 'active' : ''; ?>">Chat</a>
+                <a href="../pages/search.php" class="<?php echo ($currentPage == 'search.php') ? 'active' : ''; ?>">Search</a>
                 <a href="../includes/logout.php">Logout</a>
             </nav>
         </div>
