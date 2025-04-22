@@ -615,19 +615,19 @@ session_start();
             </div>
             <div class="testimonial-slider">
                 <div class="testimonial active">
-                    <p class="testimonial-content">"SkillConnect transformed how I learn. I found a photography mentor who helped me go from complete beginner to selling my prints in just 3 months!"</p>
-                    <div class="testimonial-author">Sarah Johnson</div>
-                    <div class="testimonial-role">Photographer, New York</div>
+                    <p class="testimonial-content">"SkillConnect transformed how I learn. I found a Web development mentor who guided me and I also could connect to other people with vast skill set!"</p>
+                    <div class="testimonial-author">Himanshu Gupta</div>
+                    <div class="testimonial-role">Developer, Uttar Pradesh</div>
                 </div>
                 <div class="testimonial">
                     <p class="testimonial-content">"Teaching web development on SkillConnect has been incredibly rewarding. I've met amazing people and even found new clients for my freelance business."</p>
-                    <div class="testimonial-author">Michael Chen</div>
-                    <div class="testimonial-role">Web Developer, San Francisco</div>
+                    <div class="testimonial-author">Rajat Kumar</div>
+                    <div class="testimonial-role">Web Developer, Uttar Pradesh</div>
                 </div>
                 <div class="testimonial">
-                    <p class="testimonial-content">"As a language enthusiast, I've both taught Spanish and learned Japanese through SkillConnect. The community is supportive and passionate."</p>
-                    <div class="testimonial-author">Emma Rodriguez</div>
-                    <div class="testimonial-role">Language Teacher, Madrid</div>
+                    <p class="testimonial-content">"As a language enthusiast, I've learned Java and Python through SkillConnect. The community is supportive and passionate."</p>
+                    <div class="testimonial-author">Pranavi N.</div>
+                    <div class="testimonial-role">Developer, Telangana</div>
                 </div>
                 <div class="testimonial-nav">
                     <div class="testimonial-dot active" data-slide="0"></div>
