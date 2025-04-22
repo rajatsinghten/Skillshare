@@ -56,7 +56,7 @@ $result = mysqli_query($conn, $query);
     
     .search-form button {
         padding: 10px 20px;
-        background-color: #3498db;
+        background-color: #db2b80;
         color: white;
         border: none;
         border-radius: 4px;
