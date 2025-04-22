@@ -676,7 +676,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             id: 'graphic-design-4',
-            img: "https://placehold.co/600x400/48C9B0/FFFFFF?text=Graphic+Design",
+            img: "../uploads/graphic_des.jpg",
             alt: "Graphic Design Tools",
             title: "Graphic Design Fundamentals",
             description: "Explore principles of design, color theory, typography, and layout techniques.",

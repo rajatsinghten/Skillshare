@@ -38,7 +38,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
         /* Elegant and Modern Header Styles */
         .site-header {
-            background-color: #ffffff; /* Light background */
+            background-color:rgba(102, 106, 112, 0.54); /* Light background */
             color: #333; /* Dark text */
             padding: 20px 0;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Subtle shadow */
@@ -105,7 +105,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
         /* Footer styles */
         .site-footer {
-            background-color: #343a40; /* Darker footer */
+            background-color:rgb(102, 106, 112); /* Darker footer */
             color: #f8f9fa; /* Light footer text */
             padding: 20px 0;
             text-align: center;
