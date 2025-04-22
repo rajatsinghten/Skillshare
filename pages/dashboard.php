@@ -636,7 +636,7 @@ $connections_result = mysqli_stmt_get_result($connections_stmt);
             <div class="resource-card">
                 <h4><i class="fas fa-book"></i> Documentation</h4>
                 <p>Explore our comprehensive guides</p>
-                <button class="resource-btn">Read Docs</button>
+                <a href="https://developer.mozilla.org/en-US/" target="_blank"><button class="resource-btn">Read Docs</button></a>
             </div>
         </div>
     </section>
