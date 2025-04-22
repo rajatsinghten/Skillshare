@@ -76,7 +76,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         }
 
         .main-nav a {
-            color: #555; /* Slightly softer text color */
+            color: #212529; /* Slightly softer text color */
             text-decoration: none;
             padding: 10px 15px; /* Increased padding */
             border-radius: 6px; /* More rounded corners */
@@ -88,7 +88,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         }
 
         .main-nav a:hover {
-            background-color: #e9ecef; /* Light hover background */
+            background-color:rgb(190, 202, 213); /* Light hover background */
             color: #db2b80; /* Modern hover color */
         }
 

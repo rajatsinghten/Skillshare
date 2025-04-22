@@ -217,7 +217,7 @@ $connections_result = mysqli_stmt_get_result($connections_stmt);
 
         .dashboard-section h2 {
             font-size: 1.8em;
-            color: #2c3e50;
+            color: #212529;
             margin-bottom: 25px;
             border-bottom: 2px solid #e0e0e0;
             padding-bottom: 10px;
@@ -330,7 +330,7 @@ $connections_result = mysqli_stmt_get_result($connections_stmt);
 
         .skill-content h4 {
             font-size: 1.25em;
-            color: #34495e;
+            color: #212529;
             margin-top: 0;
             margin-bottom: 10px;
         }
@@ -649,7 +649,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const defaultSkills = [
         {
             id: 'web-dev-1',
-            img: "https://placehold.co/600x400/5DADE2/FFFFFF?text=Web+Dev",
+            img: "../uploads/web_dev.jpg",
             alt: "Web Development Concept Image",
             title: "Modern Web Development",
             description: "Master HTML5, CSS3, Flexbox, Grid, and modern JavaScript frameworks.",
@@ -658,7 +658,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             id: 'guitar-2',
-            img: "https://placehold.co/600x400/F5B041/FFFFFF?text=Guitar",
+            img: "../uploads/guitar.webp",
             alt: "Acoustic Guitar",
             title: "Acoustic Guitar Basics",
             description: "Learn essential chords, strumming patterns, and your first few songs.",
@@ -667,7 +667,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             id: 'data-analysis-3',
-            img: "https://placehold.co/600x400/AF7AC5/FFFFFF?text=Data+Analysis",
+            img: "../uploads/da.png",
             alt: "Data Analysis Charts",
             title: "Introduction to Data Analysis",
             description: "Understand data concepts, basic statistics, and tools like Excel or Python Pandas.",
@@ -685,7 +685,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             id: 'cooking-5',
-            img: "https://placehold.co/600x400/EC7063/FFFFFF?text=Cooking",
+            img: "../uploads/cooking.jpeg",
             alt: "Cooking Ingredients",
             title: "Basic Culinary Skills",
             description: "Learn essential knife skills, cooking methods, and how to follow recipes.",

@@ -654,37 +654,21 @@ session_start();
                 <div class="footer-column">
                     <h3>SkillConnect</h3>
                     <p>Empowering individuals through knowledge sharing and community building since 2023.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
                 </div>
                 <div class="footer-column">
                     <h3>Quick Links</h3>
                     <ul>
                         <li><a href="index.php">Home</a></li>
-                        <li><a href="#features">Features</a></li>
                         <li><a href="login.php">Login</a></li>
                         <li><a href="register.php">Register</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h3>Resources</h3>
-                    <ul>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Community Guidelines</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
                     <h3>Contact Us</h3>
                     <ul>
-                        <li><i class="fas fa-envelope"></i> hello@skillconnect.com</li>
-                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
-                        <li><i class="fas fa-map-marker-alt"></i> 123 Skill St, Learning City</li>
+                        <li><i class="fas fa-envelope"></i> skillconnect@gmail.com</li>
+                        <li><i class="fas fa-phone"></i> +91 808 182 4884</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Srm University, Andha Pradesh</li>
                     </ul>
                 </div>
             </div>
