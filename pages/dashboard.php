@@ -29,9 +29,9 @@ if (!isset($_SESSION['user_name'])) {
         $_SESSION['user_name'] = 'User'; // Default if not found
     }
 }
+
 // Fetch skills shared by the user count
 $skills_shared_count = 0;
-// *** ASSUMPTION: You have a 'skills' table with a 'user_id' column ***
 $skills_sql = "SELECT COUNT(*) as count FROM skills WHERE user_id = ?";
 $skills_stmt = mysqli_prepare($conn, $skills_sql);
 if ($skills_stmt) {
@@ -46,9 +46,8 @@ if ($skills_stmt) {
     error_log("Failed to prepare skills count query: " . mysqli_error($conn));
 }
 
-
 $new_messages_count = 0;
-$messages_sql = "SELECT COUNT(*) as count FROM messages WHERE to_id = ? AND status = 'unread'"; // Or maybe 'pending' depending on your system
+$messages_sql = "SELECT COUNT(*) as count FROM messages WHERE to_id = ? AND status = 'unread'";
 $messages_stmt = mysqli_prepare($conn, $messages_sql);
 if ($messages_stmt) {
     mysqli_stmt_bind_param($messages_stmt, "i", $user_id);
@@ -61,7 +60,6 @@ if ($messages_stmt) {
 } else {
      error_log("Failed to prepare new messages count query: " . mysqli_error($conn));
 }
-
 
 // Fetch accepted connections
 $connections_sql = "
@@ -94,168 +92,245 @@ $connections_result = mysqli_stmt_get_result($connections_stmt);
     <meta charset="UTF-8">
     <title>Dashboard - SkillShare</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- <link rel="stylesheet" href="../assets/css/dashboard.css"> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         :root {
-    --primary-color:rgb(219, 43, 128);
-    --secondary-color:rgb(195, 39, 45);
-    --light-bg: #f8f9fa;
-    --text-dark: #2b2d42;
-}
+            --primary-color: rgb(219, 43, 128);
+            --secondary-color: rgb(195, 39, 45);
+            --light-bg: #f8f9fa;
+            --text-dark: #2b2d42;
+        }
 
-.dashboard-container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
 
-.welcome-banner {
-    text-align: center;
-    padding: 2rem;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: white;
-    border-radius: 1rem;
-    margin-bottom: 2rem;
-}
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin: 2rem 0;
-}
+        .welcome-banner {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
 
-.stat-card {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
+        .welcome-banner h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
 
-.quick-actions {
-    display: flex;
-    gap: 1rem;
-    margin: 2rem 0;
-    flex-wrap: wrap;
-}
+        .welcome-banner .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
 
-.action-btn {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
 
-.dashboard-section {
-    margin: 3rem 0;
-    background: white;
-    padding: 2rem;
-    border-radius: 1rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
 
-.connections-grid, .skills-grid, .resources-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-}
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
 
-.connection-card, .skill-card, .resource-card {
-    background: var(--light-bg);
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    transition: transform 0.2s;
-}
+        .stat-card i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
 
-.connection-card:hover {
-    transform: translateY(-5px);
-}
+        .stat-card h3 {
+            font-size: 2rem;
+            margin: 0.5rem 0;
+            color: var(--text-dark);
+        }
 
-.activity-list {
-    margin: 1rem 0;
-}
+        .stat-card p {
+            color: #666;
+            margin: 0;
+        }
 
-.activity-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    background: var(--light-bg);
-    margin: 0.5rem 0;
-    border-radius: 0.5rem;
-}
-.dashboard-section {
+        /* Quick Actions - Centered and Improved */
+        .quick-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .action-btn i {
+            font-size: 1.2rem;
+        }
+
+        .dashboard-section {
             background-color: #ffffff;
             border-radius: 8px;
             padding: 25px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            margin-bottom: 30px; /* Add space below the section */
+            margin-bottom: 30px;
         }
 
         .dashboard-section h2 {
-            font-size: 1.8em; /* Larger heading */
-            color: #2c3e50; /* Dark blue heading color */
-            margin-bottom: 25px; /* More space below heading */
-            border-bottom: 2px solid #e0e0e0; /* Subtle separator */
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e0e0e0;
             padding-bottom: 10px;
             display: flex;
             align-items: center;
         }
 
         .dashboard-section h2 i {
-            margin-right: 12px; /* Space between icon and text */
-            color: #f39c12; /* Gold star color */
+            margin-right: 12px;
+            color: var(--primary-color);
         }
 
-        /* Skills Grid Layout */
+        /* Connections Grid */
+        .connections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .connection-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .connection-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+        }
+
+        .connection-card h4 {
+            margin: 0.5rem 0;
+            color: var(--text-dark);
+        }
+
+        .connection-date {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .chat-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .chat-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Skills Grid */
         .skills-grid {
             display: grid;
-            /* Responsive grid: columns adjust automatically */
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px; /* Space between cards */
+            gap: 25px;
         }
 
-        /* Skill Card Styling */
         .skill-card {
             background-color: #fff;
-            border-radius: 10px; /* Slightly more rounded corners */
+            border-radius: 10px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden; /* Ensures image corners are clipped */
-            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
-            flex-direction: column; /* Stack image and content vertically */
+            flex-direction: column;
         }
 
         .skill-card:hover {
-            transform: translateY(-5px); /* Lift card on hover */
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); /* Enhance shadow on hover */
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
         }
 
         .skill-card img {
             display: block;
             width: 100%;
-            height: 180px; /* Fixed height for images */
-            object-fit: cover; /* Crop image to fit */
-            border-bottom: 1px solid #eee; /* Separator */
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
         }
 
         .skill-content {
             padding: 20px;
-            flex-grow: 1; /* Allow content to fill remaining space */
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Pushes meta to bottom */
+            justify-content: space-between;
         }
 
         .skill-content h4 {
             font-size: 1.25em;
-            color: #34495e; /* Slightly darker blue */
+            color: #34495e;
             margin-top: 0;
             margin-bottom: 10px;
         }
@@ -265,34 +340,32 @@ $connections_result = mysqli_stmt_get_result($connections_stmt);
             color: #555;
             line-height: 1.5;
             margin-bottom: 15px;
-            flex-grow: 1; /* Allow paragraph to take available space */
+            flex-grow: 1;
         }
 
-        /* Skill Meta (Learners & Button) */
         .skill-meta {
             display: flex;
-            justify-content: space-between; /* Space out learners and button */
+            justify-content: space-between;
             align-items: center;
-            margin-top: auto; /* Push to the bottom */
-            padding-top: 10px; /* Add some space above */
-            border-top: 1px solid #f0f0f0; /* Subtle separator */
+            margin-top: auto;
+            padding-top: 10px;
+            border-top: 1px solid #f0f0f0;
         }
 
         .skill-meta span {
             font-size: 0.9em;
-            color: #7f8c8d; /* Grey color for meta text */
+            color: #7f8c8d;
             display: flex;
             align-items: center;
         }
 
         .skill-meta span i {
-            margin-right: 6px; /* Space icon and text */
-            color: #3498db; /* Blue user icon */
+            margin-right: 6px;
+            color: #3498db;
         }
 
-        /* Interest Button Styling */
         .interest-btn {
-            background-color: #3498db; /* Primary blue */
+            background-color: #3498db;
             color: white;
             border: none;
             padding: 8px 15px;
@@ -304,19 +377,169 @@ $connections_result = mysqli_stmt_get_result($connections_stmt);
         }
 
         .interest-btn:hover {
-            background-color: #2980b9; /* Darker blue on hover */
+            background-color: #2980b9;
         }
 
+        .interest-btn.active {
+            background-color: #27ae60;
+        }
 
-@media (max-width: 768px) {
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .quick-actions {
-        flex-direction: column;
-    }
-}
+        /* Activity Section */
+        .activity-list {
+            margin: 1rem 0;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            margin: 0.5rem 0;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background: #e9ecef;
+        }
+
+        .activity-item i {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .activity-item p {
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .activity-item small {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .activity-form {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .activity-form input {
+            flex-grow: 1;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 0.3rem;
+        }
+
+        .activity-form button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0 1.5rem;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .activity-form button:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Resources Grid */
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .resource-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .resource-card h4 {
+            color: var(--text-dark);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .resource-card h4 i {
+            color: var(--primary-color);
+        }
+
+        .resource-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .resource-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .resource-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 0.5rem;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.3rem;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .empty-state button:hover {
+            background: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-btn {
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .dashboard-section {
+                padding: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -347,7 +570,7 @@ $connections_result = mysqli_stmt_get_result($connections_stmt);
         </div>
     </div>
 
-    <!-- Quick Actions -->
+    <!-- Quick Actions - Now properly centered -->
     <div class="quick-actions">
         <button class="action-btn" onclick="location.href='post_skill.php'">
             <i class="fas fa-plus-circle"></i> Post Skill
@@ -385,35 +608,38 @@ $connections_result = mysqli_stmt_get_result($connections_stmt);
     </section>
 
     <section class="dashboard-section">
-    <h2><i class="fas fa-star"></i> Recommended Skills</h2>
-    <div id="featured-skills" class="skills-grid">
+        <h2><i class="fas fa-star"></i> Recommended Skills</h2>
+        <div id="featured-skills" class="skills-grid">
+            <!-- Skills will be populated by JavaScript -->
         </div>
-</section>
-<section class="dashboard-section">
-    <h2><i class="fas fa-history"></i> Recent Activity</h2>
-    <div id="recent-activity" class="activity-list">
+    </section>
+    
+    <section class="dashboard-section">
+        <h2><i class="fas fa-history"></i> Recent Activity</h2>
+        <div id="recent-activity" class="activity-list">
+            <!-- Activities will be populated by JavaScript -->
         </div>
-    <form id="add-activity" class="activity-form">
-        <input type="text" placeholder="Add custom note..." required>
-        <button type="submit"><i class="fas fa-plus"></i> Add Note</button>
-    </form>
-</section>
+        <form id="add-activity" class="activity-form">
+            <input type="text" placeholder="Add custom note..." required>
+            <button type="submit"><i class="fas fa-plus"></i> Add Note</button>
+        </form>
+    </section>
 
-<section class="dashboard-section">
-    <h2><i class="fas fa-lightbulb"></i> Learning Resources</h2>
-    <div class="resources-grid">
-        <div class="resource-card">
-            <h4><i class="fas fa-video"></i> Tutorial Videos</h4>
-            <p>Watch our beginner-friendly tutorials</p>
-            <button class="resource-btn">View Library</button>
+    <section class="dashboard-section">
+        <h2><i class="fas fa-lightbulb"></i> Learning Resources</h2>
+        <div class="resources-grid">
+            <div class="resource-card">
+                <h4><i class="fas fa-video"></i> Tutorial Videos</h4>
+                <p>Watch our beginner-friendly tutorials</p>
+                <button class="resource-btn">View Library</button>
+            </div>
+            <div class="resource-card">
+                <h4><i class="fas fa-book"></i> Documentation</h4>
+                <p>Explore our comprehensive guides</p>
+                <button class="resource-btn">Read Docs</button>
+            </div>
         </div>
-        <div class="resource-card">
-            <h4><i class="fas fa-book"></i> Documentation</h4>
-            <p>Explore our comprehensive guides</p>
-            <button class="resource-btn">Read Docs</button>
-        </div>
-    </div>
-</section>
+    </section>
 </div>
 
 <script>
@@ -541,6 +767,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 </script>
+
 <?php require_once('../includes/footer.php'); ?>
 </body>
 </html>
