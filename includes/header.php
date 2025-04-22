@@ -64,7 +64,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         }
 
         .logo span {
-            color: #007bff; /* Modern accent color */
+            color: #db2b80; /* Modern accent color */
         }
 
         /* Modern Navigation Styles */
@@ -89,11 +89,11 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
         .main-nav a:hover {
             background-color: #e9ecef; /* Light hover background */
-            color: #007bff; /* Modern hover color */
+            color: #db2b80; /* Modern hover color */
         }
 
         .main-nav a.active {
-            background-color: #007bff; /* Modern active background */
+            background-color: #db2b80; /* Modern active background */
             color: white;
         }
 
@@ -145,7 +145,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 <body>
     <header class="site-header">
         <div class="container header-content">
-            <a href="/" class="logo">Skill<span>Share</span></a>
+            <a href="../pages/dashboard.php" class="logo">Skill<span>Share</span></a>
             <nav class="main-nav">
                 <a href="../pages/dashboard.php" class="<?php echo ($currentPage == 'dashboard.php') ? 'active' : ''; ?>">Dashboard</a>
                 <a href="../pages/post_skill.php" class="<?php echo ($currentPage == 'post_skill.php') ? 'active' : ''; ?>">Post Skill</a>
