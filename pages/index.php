@@ -1,5 +1,43 @@
 <?php
 session_start();
+
+require_once('../includes/db.php');
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Database connection failed: " . $e->getMessage());
+}
+
+// Fetch total number of users
+try {
+    $stmt = $pdo->query("SELECT COUNT(*) FROM users");
+    $totalUsers = $stmt->fetchColumn();
+} catch (PDOException $e) {
+    error_log("Error fetching user count: " . $e->getMessage());
+    $totalUsers = 0;
+}
+
+// Fetch total number of skills shared (counting both offers and requests)
+try {
+    $stmt = $pdo->query("SELECT COUNT(*) FROM skills");
+    $totalSkills = $stmt->fetchColumn();
+} catch (PDOException $e) {
+    error_log("Error fetching skills count: " . $e->getMessage());
+    $totalSkills = 0;
+}
+
+// Fetch total number of connections (counting distinct user pairs in messages)
+try {
+    $stmt = $pdo->query("SELECT COUNT(DISTINCT LEAST(from_id, to_id), GREATEST(from_id, to_id)) FROM messages");
+    $totalConnections = $stmt->fetchColumn();
+} catch (PDOException $e) {
+    error_log("Error fetching connections count: " . $e->getMessage());
+    $totalConnections = 0;
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -588,15 +626,15 @@ session_start();
         <div class="container">
             <div class="stats-container">
                 <div class="stat-item">
-                    <div class="stat-number" id="users-count">10,000+</div>
+                    <div class="stat-number" id="users-count">7+</div>
                     <div class="stat-label">Active Members</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number" id="skills-count">150+</div>
+                    <div class="stat-number" id="skills-count">4+</div>
                     <div class="stat-label">Skills Shared</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number" id="connections-count">5,000+</div>
+                    <div class="stat-number" id="connections-count">10+</div>
                     <div class="stat-label">Connections Made</div>
                 </div>
                 <div class="stat-item">
@@ -679,7 +717,10 @@ session_start();
     </footer>
 
     <script>
-        // Header scroll effect
+         const totalUsers = <?php echo json_encode($totalUsers); ?>;
+        const totalSkills = <?php echo json_encode($totalSkills); ?>;
+        const totalConnections = <?php echo json_encode($totalConnections); ?>;
+// Header scroll effect
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');
             if (window.scrollY > 50) {
@@ -746,10 +787,14 @@ session_start();
             const screenPosition = window.innerHeight / 1.3;
             
             if(position < screenPosition) {
-                animateValue('users-count', 0, 10000, 2000);
-                animateValue('skills-count', 0, 150, 1500);
-                animateValue('connections-count', 0, 5000, 2000);
-                animateValue('countries-count', 0, 50, 1000);
+                const usersCount = $totalUsers === 'Error' ? 0 : parseInt(totalUsers);
+                const skillsCount = $totalSkills === 'Error' ? 0 : parseInt(totalSkills);
+                const connectionsCount = $totalConnections === 'Error' ? 0 : parseInt(totalConnections);
+
+                animateValue('users-count', 0, usersCount, 2000);
+                animateValue('skills-count', 0, skillsCount, 1500);
+                animateValue('connections-count', 0, connectionsCount, 2000);
+                animateValue('countries-count', 0, 50, 1000); // Keep the static value for countries if it's not dynamic
                 window.removeEventListener('scroll', startCountingWhenVisible);
             }
         }
