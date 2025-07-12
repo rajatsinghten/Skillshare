@@ -7,7 +7,9 @@ $search = $_GET['search'] ?? '';
 $type = $_GET['type'] ?? '';
 $category = $_GET['category'] ?? '';
 
-$query = "SELECT * FROM skills WHERE 1=1";
+$query = "SELECT skills.*, users.name as user_name FROM skills 
+          JOIN users ON skills.user_id = users.id 
+          WHERE 1=1";
 
 if ($search) $query .= " AND title LIKE '%$search%'";
 if ($type) $query .= " AND type = '$type'";
@@ -165,6 +167,20 @@ $result = mysqli_query($conn, $query);
         margin-top: 20px;
     }
     
+    .skill-user {
+        color: #7f8c8d;
+        font-size: 0.85em;
+        font-style: italic;
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid #f0f0f0;
+    }
+    
+    .skill-user i {
+        color: #3498db;
+        margin-right: 5px;
+    }
+    
     @media (max-width: 768px) {
         .skill-card {
             flex-direction: column;
@@ -208,6 +224,9 @@ $result = mysqli_query($conn, $query);
                             <span class="skill-type type-<?php echo $row['type']; ?>"><?php echo ucfirst($row['type']); ?></span>
                             <span class="skill-category"><?php echo htmlspecialchars($row['category']); ?></span>
                         </p>
+                        <div class="skill-user">
+                            <i class="fas fa-user"></i> Shared by: <strong><?php echo htmlspecialchars($row['user_name']); ?></strong>
+                        </div>
                         
                         <form method="POST" action="connect.php">
                             <input type="hidden" name="to_id" value="<?php echo $row['user_id']; ?>">

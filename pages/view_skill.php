@@ -15,7 +15,7 @@ $skill = mysqli_fetch_assoc($result);
 </head>
 <body>
     <h2><?php echo $skill['title']; ?></h2>
-    <img src="../uploads/<?php echo $skill['image']; ?>" width="300"><br><br>
+    <img src="../uploads/<?php echo $skill['skill_img']; ?>" width="300"><br><br>
     <p><strong>Type:</strong> <?php echo ucfirst($skill['type']); ?></p>
     <p><strong>Category:</strong> <?php echo $skill['category']; ?></p>
     <p><?php echo $skill['description']; ?></p>

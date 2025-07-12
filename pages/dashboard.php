@@ -607,6 +607,55 @@ $connections_result = mysqli_stmt_get_result($connections_stmt);
         </div>
     </section>
 
+    <!-- Recent Skills Section -->
+    <section class="dashboard-section">
+        <h2><i class="fas fa-clock"></i> Recently Shared Skills</h2>
+        <div class="skills-grid">
+            <?php
+            // Fetch recent skills with user information
+            $recent_skills_sql = "
+                SELECT skills.*, users.name as user_name 
+                FROM skills 
+                JOIN users ON skills.user_id = users.id 
+                ORDER BY skills.created_at DESC 
+                LIMIT 6
+            ";
+            $recent_skills_result = mysqli_query($conn, $recent_skills_sql);
+            
+            if ($recent_skills_result && mysqli_num_rows($recent_skills_result) > 0): ?>
+                <?php while ($skill = mysqli_fetch_assoc($recent_skills_result)): ?>
+                    <div class="skill-card">
+                        <img src="../uploads/<?php echo htmlspecialchars($skill['skill_img']); ?>" alt="<?php echo htmlspecialchars($skill['title']); ?>">
+                        <div class="skill-content">
+                            <h4><?php echo htmlspecialchars($skill['title']); ?></h4>
+                            <p><?php echo substr(htmlspecialchars($skill['description']), 0, 100) . '...'; ?></p>
+                            <div class="skill-meta">
+                                <span style="color: #7f8c8d; font-size: 0.85em;">
+                                    <i class="fas fa-user"></i> Shared by: <strong><?php echo htmlspecialchars($skill['user_name']); ?></strong>
+                                </span>
+                                <span class="skill-type type-<?php echo $skill['type']; ?>" style="font-size: 0.8em; margin-left: 10px;">
+                                    <?php echo ucfirst($skill['type']); ?>
+                                </span>
+                            </div>
+                            <div style="margin-top: 8px;">
+                                <span style="color: #95a5a6; font-size: 0.8em;">
+                                    <i class="fas fa-tag"></i> <?php echo htmlspecialchars($skill['category']); ?>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <div class="empty-state">
+                    <i class="fas fa-lightbulb" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+                    <h3>No skills shared yet</h3>
+                    <p>Be the first to share a skill with the community!</p>
+                    <button onclick="location.href='post_skill.php'">Post Your First Skill</button>
+                </div>
+            <?php endif; ?>
+        </div>
+    </section>
+
     <section class="dashboard-section">
         <h2><i class="fas fa-star"></i> Recommended Skills</h2>
         <div id="featured-skills" class="skills-grid">
@@ -631,7 +680,7 @@ $connections_result = mysqli_stmt_get_result($connections_stmt);
             <div class="resource-card">
                 <h4><i class="fas fa-video"></i> Tutorial Videos</h4>
                 <p>Watch our beginner-friendly tutorials</p>
-                <button class="resource-btn">View Library</button>
+                <a href="https://www.geeksforgeeks.org/courses?source=google&medium=cpc&device=c&keyword=gfg&matchtype=p&campaignid=20039445781&adgroup=147845288105&gbraid=0AAAAAC9yBkAEwhpJZHeMh-l1liWrNrKie" target="_blank"><button class="resource-btn">Video Tutorial</button></a>
             </div>
             <div class="resource-card">
                 <h4><i class="fas fa-book"></i> Documentation</h4>
