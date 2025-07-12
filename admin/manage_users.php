@@ -3,22 +3,44 @@ require_once('admin_auth.php');
 require_once('../includes/db.php');
 requireAdmin();
 
-// Handle delete action
-if (isset($_GET['delete'])) {
-    $id = intval($_GET['delete']);
-    $stmt = mysqli_prepare($conn, "DELETE FROM skills WHERE id = ?");
-    mysqli_stmt_bind_param($stmt, "i", $id);
-    if (mysqli_stmt_execute($stmt)) {
-        $success_msg = "Skill deleted successfully!";
-    } else {
-        $error_msg = "Error deleting skill!";
+// Handle user actions
+if (isset($_GET['action']) && isset($_GET['user_id'])) {
+    $user_id = intval($_GET['user_id']);
+    $action = $_GET['action'];
+    
+    if ($action == 'toggle_role') {
+        $stmt = mysqli_prepare($conn, "UPDATE users SET role = CASE WHEN role = 'admin' THEN 'user' ELSE 'admin' END WHERE id = ?");
+        mysqli_stmt_bind_param($stmt, "i", $user_id);
+        if (mysqli_stmt_execute($stmt)) {
+            $success_msg = "User role updated successfully!";
+        } else {
+            $error_msg = "Error updating user role!";
+        }
+    } elseif ($action == 'delete') {
+        // Check if user has any dependencies
+        $check_stmt = mysqli_prepare($conn, "SELECT COUNT(*) as count FROM skills WHERE user_id = ?");
+        mysqli_stmt_bind_param($check_stmt, "i", $user_id);
+        mysqli_stmt_execute($check_stmt);
+        $result = mysqli_stmt_get_result($check_stmt);
+        $skills_count = mysqli_fetch_assoc($result)['count'];
+        
+        if ($skills_count > 0) {
+            $error_msg = "Cannot delete user with existing skills. Please delete their skills first.";
+        } else {
+            $stmt = mysqli_prepare($conn, "DELETE FROM users WHERE id = ? AND id != ?");
+            mysqli_stmt_bind_param($stmt, "ii", $user_id, $_SESSION['admin_id']);
+            if (mysqli_stmt_execute($stmt)) {
+                $success_msg = "User deleted successfully!";
+            } else {
+                $error_msg = "Error deleting user!";
+            }
+        }
     }
 }
 
-// Handle search and filters
+// Handle search
 $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
-$category_filter = isset($_GET['category']) ? mysqli_real_escape_string($conn, $_GET['category']) : '';
-$type_filter = isset($_GET['type']) ? mysqli_real_escape_string($conn, $_GET['type']) : '';
+$role_filter = isset($_GET['role']) ? mysqli_real_escape_string($conn, $_GET['role']) : '';
 
 // Build query with filters
 $where_conditions = [];
@@ -26,23 +48,16 @@ $params = [];
 $types = "";
 
 if (!empty($search)) {
-    $where_conditions[] = "(skills.title LIKE ? OR skills.description LIKE ? OR users.name LIKE ?)";
+    $where_conditions[] = "(name LIKE ? OR email LIKE ?)";
     $search_param = "%$search%";
     $params[] = $search_param;
     $params[] = $search_param;
-    $params[] = $search_param;
-    $types .= "sss";
+    $types .= "ss";
 }
 
-if (!empty($category_filter)) {
-    $where_conditions[] = "skills.category = ?";
-    $params[] = $category_filter;
-    $types .= "s";
-}
-
-if (!empty($type_filter)) {
-    $where_conditions[] = "skills.type = ?";
-    $params[] = $type_filter;
+if (!empty($role_filter)) {
+    $where_conditions[] = "role = ?";
+    $params[] = $role_filter;
     $types .= "s";
 }
 
@@ -51,11 +66,12 @@ if (!empty($where_conditions)) {
     $where_clause = "WHERE " . implode(" AND ", $where_conditions);
 }
 
-$sql = "SELECT skills.*, users.name, users.email 
-        FROM skills 
-        JOIN users ON skills.user_id = users.id 
+$sql = "SELECT users.*, 
+               (SELECT COUNT(*) FROM skills WHERE user_id = users.id) as skills_count,
+               (SELECT COUNT(*) FROM messages WHERE from_id = users.id OR to_id = users.id) as connections_count
+        FROM users 
         $where_clause
-        ORDER BY skills.created_at DESC";
+        ORDER BY users.created_at DESC";
 
 $stmt = mysqli_prepare($conn, $sql);
 if (!empty($params)) {
@@ -63,9 +79,6 @@ if (!empty($params)) {
 }
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
-
-// Get categories for filter dropdown
-$categories_result = mysqli_query($conn, "SELECT DISTINCT category FROM skills ORDER BY category");
 ?>
 
 <!DOCTYPE html>
@@ -73,7 +86,7 @@ $categories_result = mysqli_query($conn, "SELECT DISTINCT category FROM skills O
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Skills - Admin Panel</title>
+    <title>Manage Users - Admin Panel</title>
     <link rel="stylesheet" href="../assets/css/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -94,13 +107,13 @@ $categories_result = mysqli_query($conn, "SELECT DISTINCT category FROM skills O
                     </a>
                 </div>
                 <div class="nav-item">
-                    <a href="manage_users.php" class="nav-link">
+                    <a href="manage_users.php" class="nav-link active">
                         <i class="fas fa-users"></i>
                         Manage Users
                     </a>
                 </div>
                 <div class="nav-item">
-                    <a href="manage_skills.php" class="nav-link active">
+                    <a href="manage_skills.php" class="nav-link">
                         <i class="fas fa-cogs"></i>
                         Manage Skills
                     </a>
@@ -136,7 +149,7 @@ $categories_result = mysqli_query($conn, "SELECT DISTINCT category FROM skills O
         <div class="admin-main">
             <!-- Header -->
             <div class="admin-header">
-                <h1 class="admin-title">Manage Skills</h1>
+                <h1 class="admin-title">Manage Users</h1>
                 <div class="admin-user">
                     <div class="admin-avatar">
                         <?php echo strtoupper(substr($_SESSION['admin_name'], 0, 1)); ?>
@@ -167,24 +180,14 @@ $categories_result = mysqli_query($conn, "SELECT DISTINCT category FROM skills O
                 <form method="GET" class="search-filters">
                     <input type="text" 
                            name="search" 
-                           placeholder="Search skills, descriptions, or user names..." 
+                           placeholder="Search users by name or email..." 
                            class="search-input"
                            value="<?php echo htmlspecialchars($search); ?>">
                     
-                    <select name="category" class="filter-select">
-                        <option value="">All Categories</option>
-                        <?php while ($cat = mysqli_fetch_assoc($categories_result)): ?>
-                            <option value="<?php echo htmlspecialchars($cat['category']); ?>" 
-                                    <?php echo ($category_filter == $cat['category']) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($cat['category']); ?>
-                            </option>
-                        <?php endwhile; ?>
-                    </select>
-                    
-                    <select name="type" class="filter-select">
-                        <option value="">All Types</option>
-                        <option value="offer" <?php echo ($type_filter == 'offer') ? 'selected' : ''; ?>>Offer</option>
-                        <option value="request" <?php echo ($type_filter == 'request') ? 'selected' : ''; ?>>Request</option>
+                    <select name="role" class="filter-select">
+                        <option value="">All Roles</option>
+                        <option value="user" <?php echo ($role_filter == 'user') ? 'selected' : ''; ?>>Users</option>
+                        <option value="admin" <?php echo ($role_filter == 'admin') ? 'selected' : ''; ?>>Admins</option>
                     </select>
                     
                     <button type="submit" class="btn btn-primary">
@@ -192,17 +195,17 @@ $categories_result = mysqli_query($conn, "SELECT DISTINCT category FROM skills O
                         Search
                     </button>
                     
-                    <a href="manage_skills.php" class="btn btn-secondary">
+                    <a href="manage_users.php" class="btn btn-secondary">
                         <i class="fas fa-times"></i>
                         Clear
                     </a>
                 </form>
             </div>
             
-            <!-- Skills Table -->
+            <!-- Users Table -->
             <div class="content-card">
                 <div class="card-header">
-                    <h3 class="card-title">All Skills (<?php echo mysqli_num_rows($result); ?> found)</h3>
+                    <h3 class="card-title">All Users (<?php echo mysqli_num_rows($result); ?> found)</h3>
                 </div>
                 
                 <?php if (mysqli_num_rows($result) > 0): ?>
@@ -210,11 +213,11 @@ $categories_result = mysqli_query($conn, "SELECT DISTINCT category FROM skills O
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Skill Title</th>
-                                <th>Posted By</th>
-                                <th>Category</th>
-                                <th>Type</th>
-                                <th>Created</th>
+                                <th>User Info</th>
+                                <th>Role</th>
+                                <th>Skills</th>
+                                <th>Connections</th>
+                                <th>Joined</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -223,39 +226,49 @@ $categories_result = mysqli_query($conn, "SELECT DISTINCT category FROM skills O
                             <tr>
                                 <td>#<?php echo $row['id']; ?></td>
                                 <td>
-                                    <div style="max-width: 200px;">
-                                        <strong><?php echo htmlspecialchars($row['title']); ?></strong>
-                                        <br>
-                                        <small style="color: #718096;">
-                                            <?php echo htmlspecialchars(substr($row['description'], 0, 100)) . (strlen($row['description']) > 100 ? '...' : ''); ?>
-                                        </small>
+                                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                        <div class="admin-avatar" style="width: 35px; height: 35px; font-size: 0.9rem;">
+                                            <?php echo strtoupper(substr($row['name'], 0, 1)); ?>
+                                        </div>
+                                        <div>
+                                            <strong><?php echo htmlspecialchars($row['name']); ?></strong>
+                                            <br>
+                                            <small style="color: #718096;"><?php echo htmlspecialchars($row['email']); ?></small>
+                                        </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <strong><?php echo htmlspecialchars($row['name']); ?></strong>
-                                    <br>
-                                    <small style="color: #718096;"><?php echo htmlspecialchars($row['email']); ?></small>
+                                    <span class="status-badge <?php echo $row['role'] == 'admin' ? 'status-rejected' : 'status-accepted'; ?>">
+                                        <?php echo ucfirst($row['role']); ?>
+                                    </span>
                                 </td>
-                                <td><?php echo htmlspecialchars($row['category']); ?></td>
                                 <td>
-                                    <span class="status-badge status-<?php echo $row['type']; ?>">
-                                        <?php echo ucfirst($row['type']); ?>
+                                    <span class="status-badge status-offer">
+                                        <?php echo $row['skills_count']; ?> skills
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="status-badge status-pending">
+                                        <?php echo $row['connections_count']; ?> connections
                                     </span>
                                 </td>
                                 <td><?php echo date('M d, Y', strtotime($row['created_at'])); ?></td>
                                 <td>
-                                    <a href="../pages/view_skill.php?id=<?php echo $row['id']; ?>" 
-                                       class="btn btn-primary btn-sm" 
-                                       target="_blank"
-                                       title="View Skill">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    
-                                    <button onclick="deleteSkill(<?php echo $row['id']; ?>, '<?php echo htmlspecialchars($row['title']); ?>')" 
-                                            class="btn btn-danger btn-sm"
-                                            title="Delete Skill">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                                    <?php if ($row['id'] != $_SESSION['admin_id']): ?>
+                                        <button onclick="toggleRole(<?php echo $row['id']; ?>, '<?php echo htmlspecialchars($row['name']); ?>', '<?php echo $row['role']; ?>')" 
+                                                class="btn btn-warning btn-sm"
+                                                title="Toggle Role">
+                                            <i class="fas fa-user-cog"></i>
+                                        </button>
+                                        
+                                        <button onclick="deleteUser(<?php echo $row['id']; ?>, '<?php echo htmlspecialchars($row['name']); ?>')" 
+                                                class="btn btn-danger btn-sm"
+                                                title="Delete User">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    <?php else: ?>
+                                        <span class="status-badge status-accepted">Current Admin</span>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                             <?php endwhile; ?>
@@ -263,8 +276,8 @@ $categories_result = mysqli_query($conn, "SELECT DISTINCT category FROM skills O
                     </table>
                 <?php else: ?>
                     <div style="text-align: center; padding: 3rem; color: #718096;">
-                        <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                        <h3>No skills found</h3>
+                        <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <h3>No users found</h3>
                         <p>Try adjusting your search criteria or filters.</p>
                     </div>
                 <?php endif; ?>
@@ -273,9 +286,16 @@ $categories_result = mysqli_query($conn, "SELECT DISTINCT category FROM skills O
     </div>
     
     <script>
-        function deleteSkill(id, title) {
-            if (confirm(`Are you sure you want to delete the skill "${title}"?\n\nThis action cannot be undone.`)) {
-                window.location.href = `manage_skills.php?delete=${id}`;
+        function toggleRole(id, name, currentRole) {
+            const newRole = currentRole === 'admin' ? 'user' : 'admin';
+            if (confirm(`Are you sure you want to change ${name}'s role from ${currentRole} to ${newRole}?`)) {
+                window.location.href = `manage_users.php?action=toggle_role&user_id=${id}`;
+            }
+        }
+        
+        function deleteUser(id, name) {
+            if (confirm(`Are you sure you want to delete user "${name}"?\n\nThis action cannot be undone.`)) {
+                window.location.href = `manage_users.php?action=delete&user_id=${id}`;
             }
         }
         
