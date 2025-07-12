@@ -1,0 +1,168 @@
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Editor and IDE Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.sublime-project
+.sublime-workspace
+*.sublime-*
+
+# PHP and Composer
+/vendor/
+composer.phar
+composer.lock
+.env
+.env.local
+.env.*.local
+
+# Database Files
+*.sql.backup
+*.sql.bak
+*.db
+*.sqlite
+*.sqlite3
+
+# Log Files
+*.log
+/logs/
+error_log
+access_log
+
+# Cache and Temporary Files
+/cache/
+/tmp/
+*.tmp
+*.temp
+*.cache
+
+# Upload and Media Files (uncomment if you want to ignore uploads)
+# /uploads/*
+# !/uploads/.gitkeep
+
+# Configuration Files (uncomment to ignore config files with sensitive data)
+# /includes/config.php
+# /includes/db.php
+
+# Backup Files
+*.bak
+*.backup
+*.old
+*.orig
+
+# Archive Files
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# Node.js (if using any Node.js tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Apache/Server Files
+.htaccess.backup
+.htpasswd
+
+# PHP Storm
+.phpunit.result.cache
+/phpunit.xml
+
+# Windows
+*.exe
+*.msi
+*.bat
+
+# Linux
+*.AppImage
+*.deb
+*.rpm
+
+# Thumbnails and Preview Files
+*.jpg.thumb
+*.png.thumb
+*.gif.thumb
+
+# Development and Testing
+/tests/output/
+/tests/_output/*
+/tests/_support/_generated
+
+# Security
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Documentation Build
+/docs/_build/
+
+# IDE Generated Files
+.project
+.buildpath
+.settings/
+
+# Version Control
+.git/
+.gitattributes
+
+# PHP CS Fixer
+.php_cs.cache
+.php-cs-fixer.cache
+
+# PHPUnit
+.phpunit.cache
+/phpunit.xml
+
+# Deployment Scripts
+deploy.sh
+deploy.php
+.deployment
+
+# Local Environment
+.env.example
+local_config.php
+
+# User-specific files
+*.user
+*.suo
+*.user.preferences
+
+# Application specific
+/error_logs/
+/session_data/
+/temp_uploads/
+
+# Fonts (if not needed in repo)
+*.ttf
+*.otf
+*.woff
+*.woff2
+*.eot
+
+# Large media files (if any)
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.mp3
+*.wav
+*.ogg
